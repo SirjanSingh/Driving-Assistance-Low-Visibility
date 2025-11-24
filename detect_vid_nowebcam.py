@@ -34,7 +34,7 @@ model = YOLO("runs/train/yolov12_driving_assist2/weights/best.pt")
 model.to(device)
 
 # VIDEO INPUT FILE
-video_path = "Video_Generation_With_Added_People.mp4"     
+video_path = "videos/Video_Generation_With_Added_People.mp4"     
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
