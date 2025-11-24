@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['Car', 'Dog', 'Motorbike', 'People', 'Pothole']
+
+roboflow:
+  workspace: heeral
+  project: my-first-project-5cw2f
+  version: 9
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/heeral/my-first-project-5cw2f/dataset/9
