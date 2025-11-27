@@ -1,18 +1,18 @@
-# 🚗 Driving Assistance System – Low Visibility Object Detection  
+# Driving Assistance System – Low Visibility Object Detection  
 Real-time object detection + distance estimation using **YOLOv12-s**
 
 This project is a driver-assistance system designed to help during **low-visibility conditions** such as fog, nighttime, dust, and heavy rain. It uses **YOLOv12-s** for object detection and a **camera-calibrated distance estimation module** to warn drivers about nearby obstacles in real time.
 
 ---
 
-## 🎯 Features
+## Features
 
-### ✔️ Real-time Object Detection  
+### Real-time Object Detection  
 - Uses **YOLOv12-s**  
 - Detects vehicles, pedestrians, animals, etc.  
 - Fast inference with optimized processing
 
-### ✔️ Distance Estimation  
+### Distance Estimation  
 Based on camera calibration parameters and pinhole camera geometry:  
 - Focal lengths: fx, fy  
 - Principal point: cx, cy  
@@ -21,7 +21,7 @@ Based on camera calibration parameters and pinhole camera geometry:
 
 Outputs estimated real-world distance (meters).
 
-### ✔️ Driver Alerts  
+### Driver Alerts  
 - Warns if an object is within a dangerous range  
 - Beep alert using Windows `winsound`  
 - Example alerts:  
@@ -29,14 +29,14 @@ Outputs estimated real-world distance (meters).
   - "Warning! Dog ahead."  
   - "Warning! Car and Dog ahead."
 
-### ✔️ Webcam Mode  
+### Webcam Mode  
 - Opens webcam stream  
 - Real-time detection and distance overlay  
 - Press **Q** to quit  
 
 ---
 
-## 🖼 System Architecture
+## System Architecture
 
 1. **Frame Capture** – Webcam streaming  
 2. **YOLOv12-s Object Detection** – Bounding boxes + class IDs  
@@ -76,7 +76,7 @@ Expected console output:
 Opening webcam at index 0...
 ✔ Webcam opened successfully!
 ✔ Webcam running. Press Q to quit.
-🔔 ALERT: Warning! Car ahead.
+ALERT: Warning! Car ahead.
 ```
 
 ---
@@ -93,14 +93,14 @@ If angle is invalid, distance defaults to a safe value.
 
 ---
 
-## 🚀 Performance Notes
+## Performance Notes
 - Lightweight real-time detection  
 - Works well on standard webcams  
 - Fast YOLOv12-s model ensures minimal delay  
 
 ---
 
-## 🧩 Future Enhancements  
+## Future Enhancements  
 (Not implemented yet)
 
 - Voice alerts  
@@ -111,6 +111,6 @@ If angle is invalid, distance defaults to a safe value.
 
 ---
 
-## 📝 License  
+## License  
 This project is for educational and research use.
 b
