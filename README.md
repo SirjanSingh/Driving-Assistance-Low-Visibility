@@ -46,7 +46,7 @@ Outputs estimated real-world distance (meters).
 
 
 
-## 🛠 Installation
+## Installation
 
 ### 1️⃣ Create a virtual environment  
 ```bash
@@ -81,7 +81,7 @@ ALERT: Warning! Car ahead.
 
 ---
 
-## 📐 Distance Estimation Formula
+## Distance Estimation Formula
 
 ```
 pixel_angle = atan((y_pixel - cy) / fy)
