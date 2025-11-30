@@ -22,7 +22,7 @@ Runs fully **offline** on edge devices $\rightarrow$ ideal for on-road safety.
 # 📸 Screenshots  
 
 ### Detection Examples  
-![detection1](images/detection1.jpg)  
+![detection1](runs/test/yolov12_test_results2/confusion_matrix)  
 ![detection2](images/detection2.jpg)
 
 ### Alerts + Distance Overlay  
