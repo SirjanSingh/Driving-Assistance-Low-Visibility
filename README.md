@@ -1,8 +1,6 @@
 # DriveGuard AI – Low-Visibility Driving Assistance System  
 ### *Edge AI • YOLOv12-s • Raspberry Pi • Real-Time Distance Estimation*
 
-![banner](images/banner.jpg)
-*(Replace with your banner image inside /images)*
 
 ---
 
@@ -22,11 +20,7 @@ Runs fully **offline** on edge devices $\rightarrow$ ideal for on-road safety.
 # 📸 Screenshots  
 
 ### Detection Examples  
-![detection1](runs/train/yolov12_test_results2/confusion_matrix.png)  
 ![detection2](runs/test/yolov12_test_results2/val_batch2_pred.jpg)
-
-### Alerts + Distance Overlay  
-![alerts](images/alerts.jpg)
 
 ---
 
