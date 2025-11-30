@@ -2,18 +2,14 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 import math
-import winsound   # ✔ built-in sound player for WAV
+import winsound   
 import os
-
-# --------------------------------------
-# CAMERA CALIBRATION PARAMETERS
-# --------------------------------------
 fx = 1030.12416
 fy = 1026.17047
 cx = 327.044214
 cy = 107.086996
 
-H = 0.27   # camera height (meters)
+H = 0.27  
 theta_deg = 12
 theta = math.radians(theta_deg)
 
@@ -25,23 +21,17 @@ def estimate_distance(y_pixel):
     Z = numerator / denominator
     return max(Z, 0.05)
 
-# --------------------------------------
-# LOAD YOLO MODEL
-# --------------------------------------
 model = YOLO("runs/train/yolov12_driving_assist2/weights/best.pt")
 
-# --------------------------------------
-# WEBCAM SETUP
-# --------------------------------------
 print("Opening webcam at index 0...")
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 if not cap.isOpened():
-    print("❌ Could not open webcam at index 0, trying index 1...")
+    print(" Could not open webcam at index 0, trying index 1...")
     cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 
 if not cap.isOpened():
-    print("❌ Could not open ANY webcam.")
+    print("Could not open ANY webcam.")
     exit()
 
 print("✔ Webcam opened successfully!")
@@ -60,13 +50,10 @@ previous_alert = ""
 
 print("✔ Webcam running. Press Q to quit.")
 
-# --------------------------------------
-# WEBCAM LOOP
-# --------------------------------------
 while True:
     ret, frame = cap.read()
     if not ret:
-        print("❌ Webcam stopped sending frames.")
+        print("Webcam stopped sending frames.")
         break
 
     results = model(frame, verbose=False)
@@ -95,7 +82,6 @@ while True:
         cv2.putText(annotated, label, (int(x1), int(y1) - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
-    # ------- ALERT SYSTEM WITH BEEP SOUND -------
     unique_classes = sorted(set(classes_detected))
 
     if unique_classes:
@@ -103,9 +89,8 @@ while True:
         message = f"Warning! {alert_text} ahead."
 
         if message != previous_alert:
-            print("🔔 ALERT:", message)
+            print("ALERT:", message)
 
-            # 🔊 play your beep.wav (non-blocking)
             winsound.PlaySound("beep.wav",
                                winsound.SND_FILENAME | winsound.SND_ASYNC)
 
@@ -114,9 +99,7 @@ while True:
         cv2.putText(annotated, message, (20, 50),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
-    # --------------------------------------
-    # DISPLAY + SAVE VIDEO
-    # --------------------------------------
+    
     out.write(annotated)
     cv2.imshow("Webcam Detection", annotated)
 

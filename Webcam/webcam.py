@@ -7,10 +7,10 @@ for i in range(10):
     cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
 
     if not cap.isOpened():
-        print(f" ❌ Could not open camera {i}")
+        print(f" Could not open camera {i}")
         continue
 
-    print(f" ✅ Camera {i} opened. Showing feed... (Press q to close this feed)")
+    print(f" Camera {i} opened. Showing feed... (Press q to close this feed)")
 
     while True:
         ret, frame = cap.read()

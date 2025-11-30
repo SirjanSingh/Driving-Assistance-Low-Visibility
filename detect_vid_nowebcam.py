@@ -7,14 +7,12 @@ import time
 import torch
 import os
 
-# CAMERA CALIBRATION PARAMETERS
-
 fx = 1030.12416
 fy = 1026.17047
 cx = 327.044214
 cy = 107.086996
 
-H = 0.27   # camera height (meters)
+H = 0.27 
 theta_deg = 12
 theta = math.radians(theta_deg)
 
@@ -26,22 +24,19 @@ def estimate_distance(y_pixel):
     Z = numerator / denominator
     return max(Z, 0.05)
 
-# LOAD YOLO 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-print("🔥 Using Device:", device.upper())
+print("Using Device:", device.upper())
 
 model = YOLO("runs/train/yolov12_driving_assist2/weights/best.pt")
 model.to(device)
 
-# VIDEO INPUT FILE
 video_path = "videos/Video_Generation_With_Added_People.mp4"     
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
-    print("❌ Could not open video file!")
+    print("Could not open video file!")
     exit()
 
-# Drop frame buffering → zero lag
 cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
 fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -56,20 +51,14 @@ out = cv2.VideoWriter(
 )
 
 previous_alert = ""
-last_beep_time = 0  # stop too many beeps
+last_beep_time = 0  
 
-print("✔ Processing video...")
-
-# --------------------------------------
-# MAIN PROCESSING LOOP
-# --------------------------------------
+print(" Processing video...")
 while True:
     ret, frame = cap.read()
     if not ret:
         print("✔ Finished processing video.")
         break
-
-    # Faster inference by reducing size → huge FPS improvement
     results = model(frame, imgsz=416, verbose=False, device=device)
 
     annotated = frame.copy()
@@ -80,11 +69,7 @@ while True:
         cls = int(box.cls[0])
         class_name = model.names[cls]
         classes_detected.append(class_name)
-
-        # Distance
         distance = estimate_distance(y2)
-
-        # Confidence
         conf = float(box.conf[0])
 
         cv2.rectangle(annotated, (int(x1), int(y1)),
@@ -94,27 +79,21 @@ while True:
         cv2.putText(annotated, label, (int(x1), int(y1) - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
-    # --------------------------------------
-    # ALERT + SUPER FAST BEEP (NO LAG)
-    # --------------------------------------
     unique_classes = sorted(set(classes_detected))
 
     if unique_classes:
         alert_text = " and ".join(unique_classes)
         message = f"Warning! {alert_text} ahead."
 
-        # Beep only when message changes AND minimum 0.4 sec between beeps
+      
         if message != previous_alert and time.time() - last_beep_time > 0.4:
-            winsound.Beep(1000, 80)   # Faster & non-blocking
+            winsound.Beep(1000, 80)   
             last_beep_time = time.time()
             previous_alert = message
 
         cv2.putText(annotated, message, (20, 50),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
-    # --------------------------------------
-    # DISPLAY AND SAVE
-    # --------------------------------------
     out.write(annotated)
     cv2.imshow("Video Detection", annotated)
 

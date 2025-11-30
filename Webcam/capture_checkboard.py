@@ -5,24 +5,21 @@ import csv
 from datetime import datetime
 import numpy as np
 
-# ---------- CONFIG ----------
-CAM_INDEX = 0                 # Logitech C922
-BACKEND = cv2.CAP_DSHOW       # Windows backend
+CAM_INDEX = 0                 
+BACKEND = cv2.CAP_DSHOW       
 OUT_DIR = "images"
 LOG_CSV = os.path.join(OUT_DIR, "capture_log.csv")
 
-# CORRECT FOR YOUR PRINTED 9x7 SQUARE CHECKERBOARD
-CHECKERBOARD = (6, 6)         # inner corners
+CHECKERBOARD = (6, 6)        
 
 AUTO_SAVE = True              
 AUTO_SAVE_AREA_RATIO = 0.18   
 MIN_SECONDS_BETWEEN_SAVES = 1.0
 MAX_IMAGES = 60               
 
-# ---------- SETUP ----------
+
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# Create log file if missing
 if not os.path.exists(LOG_CSV):
     with open(LOG_CSV, "w", newline="") as f:
         writer = csv.writer(f)
@@ -30,28 +27,26 @@ if not os.path.exists(LOG_CSV):
 
 cap = cv2.VideoCapture(CAM_INDEX, BACKEND)
 if not cap.isOpened():
-    print(f"❌ Could not open camera at index {CAM_INDEX}")
+    print(f"Could not open camera at index {CAM_INDEX}")
     exit()
 
-print("✅ Camera opened. Controls: SPACE=manual save, a=toggle auto-save, q=quit")
+print("Camera opened. Controls: SPACE=manual save, a=toggle auto-save, q=quit")
 
 last_save_time = 0
 saved_count = len([n for n in os.listdir(OUT_DIR) if n.lower().endswith(('.png','.jpg'))])
 last_center = None
 
-# Termination criteria for corner refinement
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 while True:
     ret, frame = cap.read()
     if not ret:
-        print("❌ Failed to read frame")
+        print(" Failed to read frame")
         break
 
     h, w = frame.shape[:2]
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # DETECT 8x6 INNER CORNERS
     found, corners = cv2.findChessboardCorners(
         gray,
         CHECKERBOARD,
@@ -61,7 +56,6 @@ while True:
     display = frame.copy()
 
     if found:
-        # refine accuracy
         corners2 = cv2.cornerSubPix(gray, corners, (11,11), (-1,-1), criteria)
         cv2.drawChessboardCorners(display, CHECKERBOARD, corners2, found)
 
@@ -71,17 +65,14 @@ while True:
         bbox_area = (x_max - x_min) * (y_max - y_min)
         area_ratio = bbox_area / (h*w)
 
-        # movement detection center
         cx = int((x_min + x_max)/2)
         cy = int((y_min + y_max)/2)
         cur_center = (cx, cy)
 
-        # Draw bounding box
         cv2.rectangle(display, (x_min, y_min), (x_max, y_max), (0,255,0), 2)
         cv2.putText(display, "Corners detected", (10,30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
 
-        # auto-save logic
         time_ok = (time.time() - last_save_time) >= MIN_SECONDS_BETWEEN_SAVES
         moved_ok = True
         if last_center is not None:
@@ -109,7 +100,6 @@ while True:
         cv2.putText(display, "Checkerboard NOT detected", (10,30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,255), 2)
 
-    # status
     cv2.putText(display, f"Saved: {saved_count}", (10,h-20),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
 
