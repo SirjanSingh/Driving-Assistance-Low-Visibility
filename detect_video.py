@@ -2,51 +2,42 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 import math
-import winsound   # ✔ built-in sound player for WAV
+import winsound   
 import os
 
-# --------------------------------------
-# CAMERA CALIBRATION PARAMETERS
-# --------------------------------------
+
 fx = 1030.12416
 fy = 1026.17047
 cx = 327.044214
 cy = 107.086996
 
-H = 0.27   # camera height (meters)
+H = 0.27  
 theta_deg = 12
 theta = math.radians(theta_deg)
 
 def estimate_distance(y_pixel):
-    v = cy
-    delta_y = fy
-    numerator = H * math.cos(theta)
-    denominator = math.sin(theta) + ((v - y_pixel) / delta_y) * math.cos(theta)
-    Z = numerator / denominator
-    return max(Z, 0.05)
+    pixel_angle = math.atan((y_pixel - cy) / fy)
+    total_angle = theta + pixel_angle
+    if total_angle <= 0:
+        return 50.0 
+    Z = H / math.tan(total_angle)
+    return min(max(Z, 0.2), 50)
 
-# --------------------------------------
-# LOAD YOLO MODEL
-# --------------------------------------
 model = YOLO("runs/train/yolov12_driving_assist2/weights/best.pt")
 
-# --------------------------------------
-# WEBCAM SETUP
-# --------------------------------------
 print("Opening webcam at index 0...")
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 if not cap.isOpened():
-    print("❌ Could not open webcam at index 0, trying index 1...")
+    print(" Could not open webcam at index 0, trying index 1...")
     cap = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 
 if not cap.isOpened():
-    print("❌ Could not open ANY webcam.")
+    print(" Could not open ANY webcam.")
     exit()
 
-print("✔ Webcam opened successfully!")
+print(" Webcam opened successfully!")
 
-# Set resolution
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
@@ -60,13 +51,11 @@ previous_alert = ""
 
 print("✔ Webcam running. Press Q to quit.")
 
-# --------------------------------------
-# WEBCAM LOOP
-# --------------------------------------
+
 while True:
     ret, frame = cap.read()
     if not ret:
-        print("❌ Webcam stopped sending frames.")
+        print(" Webcam stopped sending frames.")
         break
 
     results = model(frame, verbose=False)
@@ -103,9 +92,8 @@ while True:
         message = f"Warning! {alert_text} ahead."
 
         if message != previous_alert:
-            print("🔔 ALERT:", message)
+            print("ALERT:", message)
 
-            # 🔊 play your beep.wav (non-blocking)
             winsound.PlaySound("beep.wav",
                                winsound.SND_FILENAME | winsound.SND_ASYNC)
 
@@ -114,9 +102,8 @@ while True:
         cv2.putText(annotated, message, (20, 50),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
-    # --------------------------------------
-    # DISPLAY + SAVE VIDEO
-    # --------------------------------------
+  
+
     out.write(annotated)
     cv2.imshow("Webcam Detection", annotated)
 
@@ -127,5 +114,5 @@ cap.release()
 out.release()
 cv2.destroyAllWindows()
 
-print("✔ Saved webcam_annotated.mp4")
-print("✔ Program finished.")
+print(" Saved webcam_annotated.mp4")
+print(" Program finished.")

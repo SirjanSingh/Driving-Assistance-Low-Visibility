@@ -7,8 +7,8 @@ results = model.val(
     split='test',
     name="yolov12_test_results",
     project="runs/test",
-    save=True,       # ✅ saves annotated images
-    save_txt=True,   # ✅ saves YOLO-format txt predictions
+    save=True,       
+    save_txt=True,   
     save_json=True
 )
 
