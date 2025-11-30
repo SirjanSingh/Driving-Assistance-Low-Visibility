@@ -58,8 +58,7 @@ Runs fully **offline** on edge devices $\rightarrow$ ideal for on-road safety.
 
 # Architecture  
 
-![architecture](images/architecture.png)  
-*(Add your architecture diagram here)*
+![architecture](image.png)  
 
 ---
 
